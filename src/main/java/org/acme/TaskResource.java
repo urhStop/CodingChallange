@@ -28,7 +28,7 @@ public class TaskResource {
     public Response create(Task task) {
         task.persist();
         if (task.isPersistent()) {
-            return Response.created(URI.create("/tasks" + task.id)).build();
+            return Response.created(URI.create("/tasks/" + task.id)).build();
         }
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
@@ -36,26 +36,36 @@ public class TaskResource {
     @PUT
     @Path("/{id}")
     @Transactional
-    public Task update(Long id, Task task) {
-        Task entity = Task.findById(id);
-        if(entity == null) {
-            throw new NotFoundException();
-        }
-        entity.title = task.title;
-        entity.description = task.description;
-        entity.completed = task.completed;
+    public Response update(@PathParam("id") Long id, Task task) {
+        try {
+            Task entity = Task.findById(id);
+            if (entity == null) {
+                throw new WebApplicationException("Task not found with id: " + id, Response.Status.NOT_FOUND);
+            }
+            entity.title = task.title;
+            entity.description = task.description;
+            entity.completed = task.completed;
 
-        return entity;
+            return Response.ok(entity).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Internal Server Error").build();
+        }
     }
 
     @DELETE
     @Path("/{id}")
     @Transactional
-    public void delete(Long id) {
-        Task entity = Task.findById(id);
-        if(entity == null) {
-            throw new NotFoundException();
+    public Response delete(@PathParam("id") Long id) {
+        try {
+            Task entity = Task.findById(id);
+            if (entity == null) {
+                throw new WebApplicationException("Task not found with id: " + id, Response.Status.NOT_FOUND);
+            }
+            entity.delete();
+
+            return Response.noContent().build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Internal Server Error").build();
         }
-        entity.delete();
     }
 }
