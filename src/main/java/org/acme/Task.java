@@ -1,11 +1,18 @@
 package org.acme;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import jakarta.persistence.Entity;
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.UUID;
+
 @Entity
-public class Task extends PanacheEntity {
+@Table(name = "tasks")
+public class Task extends PanacheEntityBase {
+
+    @Id
+    @GeneratedValue
+    public UUID id;
 
     @NotBlank(message = "Title cannot be blank")
     public String title;
@@ -22,27 +29,4 @@ public class Task extends PanacheEntity {
         this.description = description;
         this.completed = false;
     }
-/*
-    public String getTitle() {
-        return this.title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public boolean getCompleted() { return this.completed; }
-
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
-    }
-*/
 }
