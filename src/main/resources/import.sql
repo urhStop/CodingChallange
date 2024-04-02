@@ -1,0 +1,1 @@
+INSERT INTO task(id, title, description, completed) VALUES (nextval('task_seq'), 'car', 'change tyres on car', true);

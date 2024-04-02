@@ -1,15 +1,14 @@
 package org.acme;
 
 import java.util.List;
-import java.util.UUID;
 
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.Response.Status;
 
 @Path("/tasks")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 public class TaskResource {
 
     @GET
@@ -19,47 +18,47 @@ public class TaskResource {
 
     @GET
     @Path("/{id}")
-    public Task getTask(UUID id) {
-        return Task.findById(id);
+    public Task getById(@PathParam("id") Long id) {
+        Task entity = Task.findById(id);
+        if (entity == null) {
+            throw new WebApplicationException("Task with id of " + id + " does not exist.", Status.NOT_FOUND);
+        }
+        return entity;
     }
-    /*
+
     @POST
     @Transactional
-    public Response create(Task task) {
+    public Response create(@Valid Task task) {
         task.persist();
-        if (task.isPersistent()) {
-            return Response.created(URI.create("/tasks/" + task.id)).build();
-        }
-        return Response.status(Response.Status.BAD_REQUEST).build();
-    }
-    */
-    public UUID addTask(String title, String description) {
-        Task task = new Task(title, description);
-        task.persist();
-        return task.id;
+        return Response.status(Status.CREATED).entity(task).build();
     }
 
     @PUT
     @Path("/{id}")
     @Transactional
-    public Task update(UUID id, Task task) {
+    public Response update(@Valid Task task, @PathParam("id") Long id) {
         Task entity = Task.findById(id);
-        if (entity == null) throw new NotFoundException();
-
-        entity.title = task.title;
-        entity.description = task.description;
+        entity.id = id;
         entity.completed = task.completed;
-
-        return entity;
+        entity.title = task.title;
+        return Response.ok(entity).build();
     }
 
     @DELETE
     @Path("/{id}")
     @Transactional
-    public void delete(UUID id) {
+    public Response deleteOne(@PathParam("id") Long id) {
         Task entity = Task.findById(id);
-        if (entity == null) throw new NotFoundException();
-
+        if (entity == null) {
+            throw new WebApplicationException("Todo with id of " + id + " does not exist.", Status.NOT_FOUND);
+        }
         entity.delete();
+        return Response.noContent().build();
+    }
+
+    @Transactional
+    public Response deleteCompleted() {
+        Task.deleteCompleted();
+        return Response.noContent().build();
     }
 }
