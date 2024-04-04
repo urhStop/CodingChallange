@@ -56,10 +56,4 @@ public class TaskResource {
         entity.delete();
         return Response.noContent().build();
     }
-
-    @Transactional
-    public Response deleteCompleted() {
-        Task.deleteCompleted();
-        return Response.noContent().build();
-    }
 }

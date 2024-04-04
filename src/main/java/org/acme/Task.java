@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 public class Task extends PanacheEntity {
@@ -19,16 +18,4 @@ public class Task extends PanacheEntity {
     public boolean completed;
 
     public Task() {}
-
-    public static List<Task> findNotCompleted() {
-        return list("completed", false);
-    }
-
-    public static List<Task> findCompleted() {
-        return list("completed", true);
-    }
-
-    public static long deleteCompleted() {
-        return delete("completed", true);
-    }
 }

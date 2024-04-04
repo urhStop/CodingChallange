@@ -7,6 +7,11 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
@@ -63,6 +68,24 @@ public class TaskResourceTest {
                 .then()
                 .statusCode(200)
                 .body(is(UPDATED));
+    }
+
+    @ParameterizedTest
+    @Order(5)
+    @MethodSource("taskItemsToDelete")
+    public void testDelete(int id, int expectedStatus) {
+        given()
+                .pathParam("id", id)
+                .when()
+                .delete("/tasks/{id}")
+                .then()
+                .statusCode(expectedStatus);
+    }
+
+    private static Stream<Arguments> taskItemsToDelete() {
+        return Stream.of(
+                Arguments.of(51, 204),
+                Arguments.of(20, 404));
     }
 
     private static final String ALL = "[{\"id\":1,\"title\":\"car\",\"description\":\"change tyres on car\",\"completed\":true},{\"id\":51,\"title\":\"shop\",\"description\":\"buy milk, eggs, bread\",\"completed\":false},{\"id\":101,\"title\":\"homework\",\"description\":\"do homework until weekend\",\"completed\":false},{\"id\":151,\"title\":\"dog\",\"description\":\"veterinarian next week on tuesday\",\"completed\":false},{\"id\":201,\"title\":\"work\",\"description\":\"work on project\",\"completed\":false}]";
