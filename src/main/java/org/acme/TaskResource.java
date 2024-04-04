@@ -33,14 +33,15 @@ public class TaskResource {
         return Response.status(Status.CREATED).entity(task).build();
     }
 
-    @PUT
+    @PATCH
     @Path("/{id}")
     @Transactional
     public Response update(@Valid Task task, @PathParam("id") Long id) {
         Task entity = Task.findById(id);
         entity.id = id;
-        entity.completed = task.completed;
         entity.title = task.title;
+        entity.description = task. description;
+        entity.completed = task.completed;
         return Response.ok(entity).build();
     }
 
