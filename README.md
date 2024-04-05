@@ -52,7 +52,13 @@ If you want to learn more about building native executables, please consult http
 - Hibernate ORM with Panache ([guide](https://quarkus.io/guides/hibernate-orm-panache)): Simplify your persistence code for Hibernate ORM via the active record or the repository pattern
 - JDBC Driver - PostgreSQL ([guide](https://quarkus.io/guides/datasource)): Connect to the PostgreSQL database via JDBC
 
-## Testiranje
+## Testiranje v developer načinu
 
-- Zagon aplikacije v dev načinu : ```./mvnw compile quarkus:dev```
+- Zagon aplikacije: ```./mvnw compile quarkus:dev```
 - Pogon testov: klikni o, nato r
+
+## Pakiranje in zagon aplikacije
+
+- Pakiranje: ```./mvnw package```
+- Zagon: ```java -jar target/quarkus-app/quarkus-run.jar```
+- Delovanje metod in klicov preveril z Postmanom
