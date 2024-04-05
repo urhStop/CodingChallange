@@ -61,4 +61,4 @@ If you want to learn more about building native executables, please consult http
 
 - Pakiranje: ```./mvnw package```
 - Zagon: ```java -jar target/quarkus-app/quarkus-run.jar```
-- Delovanje metod in klicov preveril z Postmanom
+- Delovanje metod in klicov preveril s Postmanom
